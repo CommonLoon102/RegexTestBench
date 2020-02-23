@@ -4,7 +4,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Title="Regex Test Bench"
 	ClientSize="1000, 720"
-	MinimumSize="800, 720"
+	MinimumSize="1000, 720"
 	Padding="10"
 	>
 
@@ -24,8 +24,7 @@
                 </TableRow>
                 <TableRow>
                   <TableCell>
-                  <ListBox>
-                    <ListItem>Pattern History1</ListItem>
+                  <ListBox ID="lboPatternHistory">
                   </ListBox>
                   </TableCell>
                 </TableRow>
@@ -40,11 +39,60 @@
                     </Label>
                   </TableCell>
                 </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <TextArea>
+                <TableRow ScaleHeight="True">
+                  <TableCell ScaleWidth="True">
+                    <TextArea ID="txtRegexPattern">
                       My Regex Pattern
                     </TextArea>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>
+                    <Label BackgroundColor="CornflowerBlue" TextColor="White" TextAlignment="Center">
+                      Replacement String
+                    </Label>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>
+                    <TextArea ID="txtReplacementString">
+                      My Replacement String
+                    </TextArea>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>
+                    <TableLayout>
+                      <TableRow>
+                        <TableCell>
+                          <StackLayout Padding="5,1,1,1" Orientation="Vertical">
+                            <CheckBox ID="chkIgnoreCase" ToolTip="Don't distinguish between upper and lower case">Ignore Case</CheckBox>
+                            <CheckBox ID="chkSingleLine" ToolTip="Make period match \n too">Single Line</CheckBox>
+                            <CheckBox ID="chkCultureInvariant" ToolTip="Make match insensitive to the culture">Culture Invariant</CheckBox>
+                            <CheckBox ID="chkExplicitCapture" ToolTip="Capture groups only if explicitly numbered or named">Explicit Capture</CheckBox>
+                            <CheckBox ID="chkEcmaScript" ToolTip="ECMA Script compliant, can only use with ignore case and multiline">ECMA Script</CheckBox>
+                          </StackLayout>
+                        </TableCell>
+                        <TableCell>
+                          <StackLayout Padding="5,1,1,1" Orientation="Vertical">
+                            <CheckBox ID="chkIgnoreWhite" ToolTip="Ignore unescaped whitespace, allow comments after #">Ignore White</CheckBox>
+                            <CheckBox ID="chkMultiline" ToolTip="^ and $ will match the entire string instead of lines" Checked="True">Multiline</CheckBox>
+                            <CheckBox ID="chkRightToLeft" ToolTip="Search from right to left">Right to Left"</CheckBox>
+                            <CheckBox ID="chkCompiled" ToolTip="Compile to assembly, slower startup, faster search" Checked="True">Compiled"</CheckBox>
+                          </StackLayout>
+                        </TableCell>
+                        <TableCell>
+                          <StackLayout ToolTip="Stop search after specified milliseconds" Padding="20,1,1,1" Orientation="Horizontal">
+                            <Label>Timeout</Label>
+                            <Panel Padding="5,0,5,0">
+                              <NumericStepper ID="nudTimeout" MinValue="1" MaxValue="9999" MaximumDecimalPlaces="0" Value="2000" Increment="1000">
+                              </NumericStepper>
+                            </Panel>
+                            <Label>ms</Label>
+                            </StackLayout>
+                        </TableCell>
+                      </TableRow>
+                    </TableLayout>
                   </TableCell>
                 </TableRow>
               </TableLayout>
@@ -86,10 +134,7 @@
                 </TableRow>
                 <TableRow>
                   <TableCell>
-                    <ListBox>
-                      <ListItem>
-                        Input History1
-                      </ListItem>
+                    <ListBox ID="lboInputHistory">
                     </ListBox>
                   </TableCell>
                 </TableRow>
@@ -106,7 +151,7 @@
                 </TableRow>
                 <TableRow>
                   <TableCell>
-                    <TextArea>
+                    <TextArea ID="txtInputText">
                       Input text
                     </TextArea>
                   </TableCell>
@@ -128,8 +173,8 @@
               <TableCell>
                 <Splitter Panel2MinimumSize="35" FixedPanel="Panel2" Orientation="Vertical">
                   <Splitter.Panel1>
-                    <TreeView>
-                    </TreeView>
+                    <TreeGridView ID="tvwResultExplorer">
+                    </TreeGridView>
                   </Splitter.Panel1>
                   <Splitter.Panel2>
                     <TextArea Height="30" ReadOnly="True"></TextArea>
@@ -146,7 +191,6 @@
 	<Form.Menu>
 		<MenuBar>
 			<ButtonMenuItem Text="F&amp;ile">
-				<ButtonMenuItem Text="Click Me!" Click="HandleClickMe" />
 			</ButtonMenuItem>
 			<MenuBar.ApplicationItems>
 				<ButtonMenuItem Text="Preferences.." Shortcut="{On Control+O, Mac=Application+Comma}" />
@@ -161,7 +205,10 @@
 	</Form.Menu>
 	<Form.ToolBar>
 		<ToolBar>
-			<ButtonToolItem Text="Click Me!" Click="HandleClickMe" />
+			<ButtonToolItem Text="Match" Click="HandleMatch" />
+      <ButtonToolItem Text="Replace" Click="HandleReplace" />
+      <ButtonToolItem Text="Validate" Click="HandleValidate" />
+      <ButtonToolItem Text="Split" Click="HandleSplit" />
 		</ToolBar>
 	</Form.ToolBar>
 </Form>
