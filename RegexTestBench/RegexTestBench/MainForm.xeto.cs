@@ -10,12 +10,51 @@ namespace RegexTestBench
 {
     public class MainForm : Form
     {
+        private readonly TextArea txtRegexPattern;
+        private readonly TextArea txtReplacementString;
+        private readonly TextArea txtInputText;
+        private readonly ListBox lboPatternHistory;
+        private readonly ListBox lboInputHistory;
+        private readonly CheckBox chkCompiled;
+        private readonly CheckBox chkCultureInvariant;
+        private readonly CheckBox chkEcmaScript;
+        private readonly CheckBox chkExplicitCapture;
+        private readonly CheckBox chkIgnoreWhite;
+        private readonly CheckBox chkIgnoreCase;
+        private readonly CheckBox chkMultiline;
+        private readonly CheckBox chkRightToLeft;
+        private readonly CheckBox chkSingleLine;
+        private readonly NumericStepper nudTimeout;
+        private readonly TreeGridView tvwResultExplorer;
+
         private readonly LinkedList<RegexPattern> patternHistory = new LinkedList<RegexPattern>();
         private readonly LinkedList<string> inputHistory = new LinkedList<string>();
 
         public MainForm()
         {
             XamlReader.Load(this);
+            txtRegexPattern = FindChild<TextArea>("txtRegexPattern");
+            txtReplacementString = FindChild<TextArea>("txtReplacementString");
+            txtInputText = FindChild<TextArea>("txtInputText");
+            lboPatternHistory = FindChild<ListBox>("lboPatternHistory");
+            lboInputHistory = FindChild<ListBox>("lboInputHistory");
+            chkCompiled = FindChild<CheckBox>("chkCompiled");
+            chkCultureInvariant = FindChild<CheckBox>("chkCultureInvariant");
+            chkEcmaScript = FindChild<CheckBox>("chkEcmaScript");
+            chkExplicitCapture = FindChild<CheckBox>("chkExplicitCapture");
+            chkIgnoreWhite = FindChild<CheckBox>("chkIgnoreWhite");
+            chkIgnoreCase = FindChild<CheckBox>("chkIgnoreCase");
+            chkMultiline = FindChild<CheckBox>("chkMultiline");
+            chkRightToLeft = FindChild<CheckBox>("chkRightToLeft");
+            chkSingleLine = FindChild<CheckBox>("chkSingleLine");
+            nudTimeout = FindChild<NumericStepper>("nudTimeout");
+            tvwResultExplorer = FindChild<TreeGridView>("tvwResultExplorer");
+
+            tvwResultExplorer.Columns.Add(new GridColumn()
+            {
+                HeaderText = "Match",
+                DataCell = new TextBoxCell(0)
+            });
         }
 
         protected void HandleMatch(object sender, EventArgs e)
@@ -57,18 +96,27 @@ namespace RegexTestBench
             RegexPattern pattern = GetPattern();
             RegexOptions regexOptions = GetRegexOptions(pattern);
             Regex regex = new Regex(pattern.Pattern, regexOptions, TimeSpan.FromMilliseconds(pattern.Timeout));
-            string inputText = FindChild<TextArea>("txtInputText").Text;
-            MatchCollection matches = regex.Matches(inputText);
+            MatchCollection matches = regex.Matches(txtInputText.Text);
             PopulateResultExplorer(matches);
         }
 
         private void PopulateResultExplorer(MatchCollection matches)
         {
-            var resultExplorer = FindChild<TreeGridView>("tvwResultExplorer");
-            resultExplorer.SuspendLayout();
-            resultExplorer.Columns.Clear();
-            
-            resultExplorer.ResumeLayout();
+            tvwResultExplorer.SuspendLayout();
+            var treeGridItemCollection = new TreeGridItemCollection();
+            foreach (Match match in matches)
+            {
+                var item = new TreeGridItem
+                {
+                    Values = new string[] { match.Value },
+                    Tag = match
+                };
+
+                treeGridItemCollection.Add(item);
+            }
+
+            tvwResultExplorer.DataStore = treeGridItemCollection;
+            tvwResultExplorer.ResumeLayout();
         }
 
         private void SaveHistory()
@@ -78,8 +126,7 @@ namespace RegexTestBench
             patternHistory.AddFirst(pattern);
             UpdatePatternHistoryListBox();
 
-            string inputText = FindChild<TextArea>("txtInputText").Text;
-            inputHistory.AddFirst(inputText);
+            inputHistory.AddFirst(txtInputText.Text);
             UpdateInputHistoryListBox();
         }
 
@@ -87,18 +134,18 @@ namespace RegexTestBench
         {
             return new RegexPattern()
             {
-                Pattern = FindChild<TextArea>("txtRegexPattern").Text,
-                ReplacementText = FindChild<TextArea>("txtReplacementString").Text,
-                IsCompiled = FindChild<CheckBox>("chkCompiled").Checked ?? false,
-                IsCultureInvariant = FindChild<CheckBox>("chkCultureInvariant").Checked ?? false,
-                IsEcmaScript = FindChild<CheckBox>("chkEcmaScript").Checked ?? false,
-                IsExplicitCapture = FindChild<CheckBox>("chkExplicitCapture").Checked ?? false,
-                IsIgnoreWhite = FindChild<CheckBox>("chkIgnoreWhite").Checked ?? false,
-                IsIgnoreCase = FindChild<CheckBox>("chkIgnoreCase").Checked ?? false,
-                IsMultiline = FindChild<CheckBox>("chkMultiline").Checked ?? false,
-                IsRightToLeft = FindChild<CheckBox>("chkRightToLeft").Checked ?? false,
-                IsSingleLine = FindChild<CheckBox>("chkSingleLine").Checked ?? false,
-                Timeout = (int)FindChild<NumericStepper>("nudTimeout").Value
+                Pattern = txtRegexPattern.Text,
+                ReplacementText = txtReplacementString.Text,
+                IsCompiled = chkCompiled.Checked ?? false,
+                IsCultureInvariant = chkCultureInvariant.Checked ?? false,
+                IsEcmaScript = chkEcmaScript.Checked ?? false,
+                IsExplicitCapture = chkExplicitCapture.Checked ?? false,
+                IsIgnoreWhite = chkIgnoreWhite.Checked ?? false,
+                IsIgnoreCase = chkIgnoreCase.Checked ?? false,
+                IsMultiline = chkMultiline.Checked ?? false,
+                IsRightToLeft = chkRightToLeft.Checked ?? false,
+                IsSingleLine = chkSingleLine.Checked ?? false,
+                Timeout = (int)nudTimeout.Value
             };
         }
 
@@ -129,36 +176,34 @@ namespace RegexTestBench
 
         private void UpdatePatternHistoryListBox()
         {
-            var patternHistoryListBox = FindChild<ListBox>("lboPatternHistory");
-            patternHistoryListBox.SuspendLayout();
-            patternHistoryListBox.Items.Clear();
+            lboPatternHistory.SuspendLayout();
+            lboPatternHistory.Items.Clear();
             foreach (var item in patternHistory)
             {
-                patternHistoryListBox.Items.Add(
+                lboPatternHistory.Items.Add(
                     new ListItem()
                     {
                         Tag = item,
                         Text = item.ToString()
                     });
             }
-            patternHistoryListBox.ResumeLayout();
+            lboPatternHistory.ResumeLayout();
         }
 
         private void UpdateInputHistoryListBox()
         {
-            var inputHistoryListBox = FindChild<ListBox>("lboInputHistory");
-            inputHistoryListBox.SuspendLayout();
-            inputHistoryListBox.Items.Clear();
+            lboInputHistory.SuspendLayout();
+            lboInputHistory.Items.Clear();
             foreach (var item in inputHistory)
             {
-                inputHistoryListBox.Items.Add(
+                lboInputHistory.Items.Add(
                     new ListItem()
                     {
                         Tag = item,
                         Text = new string(item.Take(20).ToArray())
                     });
             }
-            inputHistoryListBox.ResumeLayout();
+            lboInputHistory.ResumeLayout();
         }
     }
 }
