@@ -51,6 +51,8 @@ namespace RegexTestBench
                 Timeout = (int)nudTimeout.Value
             };
 
+        private Regex CurrentRegex => CurrentPattern.Regex;
+
         public MainForm()
         {
             XamlReader.Load(this);
@@ -187,11 +189,10 @@ namespace RegexTestBench
 
         private void RunMatch()
         {
-            Regex regex = CurrentPattern.Regex;
-            var groupNames = regex.GetGroupNames();
+            var groupNames = CurrentRegex.GetGroupNames();
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
-            MatchCollection matches = regex.Matches(txtInputText.Text);
+            MatchCollection matches = CurrentRegex.Matches(txtInputText.Text);
             stopwatch.Stop();
             string match = matches.Count == 1 ? "Match" : "Matches";
             lblStatusMessage.Text = $"{matches.Count} {match}, {stopwatch.Elapsed.TotalMilliseconds} ms";
@@ -200,11 +201,9 @@ namespace RegexTestBench
 
         private void SaveHistory()
         {
-            RegexPattern pattern = CurrentPattern;
-
-            if (!patternHistory.Any(ph => ph.IsSame(pattern)))
+            if (!patternHistory.Any(ph => ph.IsSame(CurrentPattern)))
             {
-                patternHistory.AddFirst(pattern);
+                patternHistory.AddFirst(CurrentPattern);
                 UpdatePatternHistoryListBox();
             }
 
