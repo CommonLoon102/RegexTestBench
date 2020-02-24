@@ -109,25 +109,12 @@ namespace RegexTestBench
             }
         }
 
-        private void HandleValidate(object sender, EventArgs e)
-        {
-            SaveHistory();
-            try
-            {
-                RunMatch();
-            }
-            catch (RegexMatchTimeoutException)
-            {
-                ShowTimeoutErrorMessage();
-            }
-        }
-
         private void HandleSplit(object sender, EventArgs e)
         {
             SaveHistory();
             try
             {
-                RunMatch();
+                RunSplit();
             }
             catch (RegexMatchTimeoutException)
             {
@@ -146,13 +133,22 @@ namespace RegexTestBench
 
         private void HandleResultExplorerSelectedItemChanged(object sender, EventArgs e)
         {
-            if (!((tvwResultExplorer.SelectedItem as TreeGridItem)?.Tag is Capture capture))
-                return;
-
-            txtMatchValue.Text = capture.Value;
-            txtInputText.Selection = new Range<int>(capture.Index, capture.Index + capture.Length - 1);
-            txtInputText.Focus();
-            lblPosition.Text = $"Position: {capture.Index} Length: {capture.Length}";
+            switch ((tvwResultExplorer.SelectedItem as TreeGridItem)?.Tag)
+            {
+                case Capture capture:
+                    txtMatchValue.Text = capture.Value;
+                    txtInputText.Selection = new Range<int>(capture.Index, capture.Index + capture.Length - 1);
+                    txtInputText.Focus();
+                    lblPosition.Text = $"Position: {capture.Index} Length: {capture.Length}";
+                    break;
+                case string splitText:
+                    txtMatchValue.Text = splitText;
+                    break;
+                default:
+                    break;
+                case null:
+                    break;
+            }
         }
 
         private void HandlePatternHistorySelectedIndexChanged(object sender, EventArgs e)
@@ -207,6 +203,17 @@ namespace RegexTestBench
             PopulateResultExplorerReplace(replacedText);
         }
 
+        private void RunSplit()
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            string[] splitTexts = CurrentRegex.Split(txtInputText.Text);
+            stopwatch.Stop();
+            string part = splitTexts.Length == 1 ? "Part" : "Parts";
+            lblStatusMessage.Text = $"{splitTexts.Length} {part}, {stopwatch.Elapsed.TotalMilliseconds} ms";
+            PopulateResultExplorerSplit(splitTexts);
+        }
+
         private void SaveHistory()
         {
             if (!patternHistory.Any(ph => ph.IsSame(CurrentPattern)))
@@ -256,16 +263,8 @@ namespace RegexTestBench
 
         private void PopulateResultExplorerMatch(MatchCollection matches, string[] groupNames)
         {
-            txtMatchValue.Text = string.Empty;
-            splResultExplorer.Position = splResultExplorer.Height - 30;
             tvwResultExplorer.SuspendLayout();
-            tvwResultExplorer.ShowHeader = false;
-            tvwResultExplorer.Columns.Clear();
-            tvwResultExplorer.Columns.Add(new GridColumn()
-            {
-                HeaderText = "Match",
-                DataCell = new TextBoxCell(0)
-            });
+            ResetResultExplorer();
 
             var treeGridItemCollection = new TreeGridItemCollection();
             foreach (Match match in matches)
@@ -299,6 +298,39 @@ namespace RegexTestBench
             lblPosition.Text = string.Empty;
             txtMatchValue.Text = replacedText;
             splResultExplorer.Position = 0;
+        }
+
+        private void PopulateResultExplorerSplit(string[] splitTexts)
+        {
+            tvwResultExplorer.SuspendLayout();
+            ResetResultExplorer();
+
+            var treeGridItemCollection = new TreeGridItemCollection();
+            foreach (string splitText in splitTexts)
+            {
+                var item = new TreeGridItem()
+                {
+                    Values = new string[] { splitText },
+                    Tag = splitText
+                };
+
+                treeGridItemCollection.Add(item);
+            }
+
+            tvwResultExplorer.DataStore = treeGridItemCollection;
+            tvwResultExplorer.ResumeLayout();
+        }
+
+        private void ResetResultExplorer()
+        {
+            txtMatchValue.Text = string.Empty;
+            splResultExplorer.Position = splResultExplorer.Height - 30;
+            tvwResultExplorer.ShowHeader = false;
+            tvwResultExplorer.Columns.Clear();
+            tvwResultExplorer.Columns.Add(new GridColumn()
+            {
+                DataCell = new TextBoxCell(0)
+            });
         }
     }
 }

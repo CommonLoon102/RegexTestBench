@@ -206,7 +206,6 @@
     <ToolBar>
       <ButtonToolItem Text="Match" Click="HandleMatch" />
       <ButtonToolItem Text="Replace" Click="HandleReplace" />
-      <ButtonToolItem Text="Validate" Click="HandleValidate" />
       <ButtonToolItem Text="Split" Click="HandleSplit" />
     </ToolBar>
   </Form.ToolBar>
