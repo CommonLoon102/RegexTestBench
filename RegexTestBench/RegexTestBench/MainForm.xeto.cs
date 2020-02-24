@@ -13,6 +13,7 @@ namespace RegexTestBench
         private readonly TextArea txtRegexPattern;
         private readonly TextArea txtReplacementString;
         private readonly TextArea txtInputText;
+        private readonly TextArea txtMatchValue;
         private readonly ListBox lboPatternHistory;
         private readonly ListBox lboInputHistory;
         private readonly CheckBox chkCompiled;
@@ -36,6 +37,7 @@ namespace RegexTestBench
             txtRegexPattern = FindChild<TextArea>("txtRegexPattern");
             txtReplacementString = FindChild<TextArea>("txtReplacementString");
             txtInputText = FindChild<TextArea>("txtInputText");
+            txtMatchValue = FindChild<TextArea>("txtMatchValue");
             lboPatternHistory = FindChild<ListBox>("lboPatternHistory");
             lboInputHistory = FindChild<ListBox>("lboInputHistory");
             chkCompiled = FindChild<CheckBox>("chkCompiled");
@@ -50,6 +52,7 @@ namespace RegexTestBench
             nudTimeout = FindChild<NumericStepper>("nudTimeout");
             tvwResultExplorer = FindChild<TreeGridView>("tvwResultExplorer");
 
+            tvwResultExplorer.ShowHeader = false;
             tvwResultExplorer.Columns.Add(new GridColumn()
             {
                 HeaderText = "Match",
@@ -91,16 +94,28 @@ namespace RegexTestBench
             Application.Instance.Quit();
         }
 
+        private void HandleResultExplorerSelectedItemChanged(object sender, EventArgs e)
+        {
+            if (tvwResultExplorer.SelectedItem == null)
+                return;
+
+            Capture capture = ((tvwResultExplorer.SelectedItem as TreeGridItem).Tag as Capture);
+            txtMatchValue.Text = capture.Value;
+            txtInputText.Selection = new Range<int>(capture.Index, capture.Index + capture.Length - 1);
+            txtInputText.Focus();
+        }
+
         private void RunMatch()
         {
             RegexPattern pattern = GetPattern();
             RegexOptions regexOptions = GetRegexOptions(pattern);
             Regex regex = new Regex(pattern.Pattern, regexOptions, TimeSpan.FromMilliseconds(pattern.Timeout));
+            var groupNames = regex.GetGroupNames();
             MatchCollection matches = regex.Matches(txtInputText.Text);
-            PopulateResultExplorer(matches);
+            PopulateResultExplorer(matches, groupNames);
         }
 
-        private void PopulateResultExplorer(MatchCollection matches)
+        private void PopulateResultExplorer(MatchCollection matches, string[] groupNames)
         {
             tvwResultExplorer.SuspendLayout();
             var treeGridItemCollection = new TreeGridItemCollection();
@@ -111,6 +126,16 @@ namespace RegexTestBench
                     Values = new string[] { match.Value },
                     Tag = match
                 };
+
+                foreach (string groupName in groupNames.Where(g => g != "0"))
+                {
+                    Group group = match.Groups[groupName];
+                    item.Children.Add(new TreeGridItem()
+                    {
+                        Values = new string[] { $"{groupName}: {group.Value}" },
+                        Tag = group
+                    });
+                }
 
                 treeGridItemCollection.Add(item);
             }
@@ -200,7 +225,7 @@ namespace RegexTestBench
                     new ListItem()
                     {
                         Tag = item,
-                        Text = new string(item.Take(20).ToArray())
+                        Text = new string(item.Take(20).TakeWhile(c => c != '\r' && c != '\n').ToArray())
                     });
             }
             lboInputHistory.ResumeLayout();

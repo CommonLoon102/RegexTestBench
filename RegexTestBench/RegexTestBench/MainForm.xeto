@@ -77,8 +77,8 @@
                           <StackLayout Padding="5,1,1,1" Orientation="Vertical">
                             <CheckBox ID="chkIgnoreWhite" ToolTip="Ignore unescaped whitespace, allow comments after #">Ignore White</CheckBox>
                             <CheckBox ID="chkMultiline" ToolTip="^ and $ will match the entire string instead of lines" Checked="True">Multiline</CheckBox>
-                            <CheckBox ID="chkRightToLeft" ToolTip="Search from right to left">Right to Left"</CheckBox>
-                            <CheckBox ID="chkCompiled" ToolTip="Compile to assembly, slower startup, faster search" Checked="True">Compiled"</CheckBox>
+                            <CheckBox ID="chkRightToLeft" ToolTip="Search from right to left">Right to Left</CheckBox>
+                            <CheckBox ID="chkCompiled" ToolTip="Compile to assembly, slower startup, faster search" Checked="True">Compiled</CheckBox>
                           </StackLayout>
                         </TableCell>
                         <TableCell>
@@ -173,11 +173,11 @@
               <TableCell>
                 <Splitter Panel2MinimumSize="35" FixedPanel="Panel2" Orientation="Vertical">
                   <Splitter.Panel1>
-                    <TreeGridView ID="tvwResultExplorer">
+                    <TreeGridView ID="tvwResultExplorer" SelectedItemChanged="HandleResultExplorerSelectedItemChanged">
                     </TreeGridView>
                   </Splitter.Panel1>
                   <Splitter.Panel2>
-                    <TextArea Height="30" ReadOnly="True"></TextArea>
+                    <TextArea ID="txtMatchValue" Height="30" ReadOnly="True"></TextArea>
                   </Splitter.Panel2>
                 </Splitter>
               </TableCell>
