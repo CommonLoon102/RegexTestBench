@@ -105,6 +105,36 @@ namespace RegexTestBench
             txtInputText.Focus();
         }
 
+        private void HandlePatternHistorySelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lboPatternHistory.SelectedIndex < 0)
+                return;
+
+            RegexPattern pattern = (lboPatternHistory.Items[lboPatternHistory.SelectedIndex] as ListItem).Tag as RegexPattern;
+            txtRegexPattern.Text = pattern.Pattern;
+            txtReplacementString.Text = pattern.ReplacementText;
+            chkCompiled.Checked = pattern.IsCompiled;
+            chkCultureInvariant.Checked = pattern.IsCultureInvariant;
+            chkEcmaScript.Checked = pattern.IsEcmaScript;
+            chkExplicitCapture.Checked = pattern.IsExplicitCapture;
+            chkIgnoreCase.Checked = pattern.IsIgnoreCase;
+            chkIgnoreWhite.Checked = pattern.IsIgnoreWhite;
+            chkMultiline.Checked = pattern.IsMultiline;
+            chkRightToLeft.Checked = pattern.IsRightToLeft;
+            chkSingleLine.Checked = pattern.IsSingleLine;
+            nudTimeout.Value = pattern.Timeout;
+        }
+
+        private void HandleInputHistorySelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lboInputHistory.SelectedIndex < 0)
+                return;
+
+            string inputText = (lboInputHistory.Items[lboInputHistory.SelectedIndex] as ListItem).Tag as string;
+            txtInputText.Text = inputText;
+            txtInputText.Selection = new Range<int>(0, 0);
+        }
+
         private void RunMatch()
         {
             RegexPattern pattern = GetPattern();
@@ -203,7 +233,7 @@ namespace RegexTestBench
         {
             lboPatternHistory.SuspendLayout();
             lboPatternHistory.Items.Clear();
-            foreach (var item in patternHistory)
+            foreach (RegexPattern item in patternHistory)
             {
                 lboPatternHistory.Items.Add(
                     new ListItem()
@@ -219,7 +249,7 @@ namespace RegexTestBench
         {
             lboInputHistory.SuspendLayout();
             lboInputHistory.Items.Clear();
-            foreach (var item in inputHistory)
+            foreach (string item in inputHistory)
             {
                 lboInputHistory.Items.Add(
                     new ListItem()

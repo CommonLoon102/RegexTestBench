@@ -24,7 +24,7 @@
                 </TableRow>
                 <TableRow>
                   <TableCell>
-                  <ListBox ID="lboPatternHistory">
+                  <ListBox ID="lboPatternHistory" SelectedIndexChanged="HandlePatternHistorySelectedIndexChanged">
                   </ListBox>
                   </TableCell>
                 </TableRow>
@@ -134,7 +134,7 @@
                 </TableRow>
                 <TableRow>
                   <TableCell>
-                    <ListBox ID="lboInputHistory">
+                    <ListBox ID="lboInputHistory" SelectedIndexChanged="HandleInputHistorySelectedIndexChanged">
                     </ListBox>
                   </TableCell>
                 </TableRow>
@@ -188,27 +188,12 @@
     </Splitter.Panel2>
   </Splitter>
 
-	<Form.Menu>
-		<MenuBar>
-			<ButtonMenuItem Text="F&amp;ile">
-			</ButtonMenuItem>
-			<MenuBar.ApplicationItems>
-				<ButtonMenuItem Text="Preferences.." Shortcut="{On Control+O, Mac=Application+Comma}" />
-			</MenuBar.ApplicationItems>
-			<MenuBar.QuitItem>
-				<ButtonMenuItem Text="Quit" Shortcut="CommonModifier+Q" Click="HandleQuit" />
-			</MenuBar.QuitItem>
-			<MenuBar.AboutItem>
-				<ButtonMenuItem Text="About..." Click="HandleAbout" />
-			</MenuBar.AboutItem>
-		</MenuBar>
-	</Form.Menu>
-	<Form.ToolBar>
-		<ToolBar>
-			<ButtonToolItem Text="Match" Click="HandleMatch" />
+  <Form.ToolBar>
+    <ToolBar>
+      <ButtonToolItem Text="Match" Click="HandleMatch" />
       <ButtonToolItem Text="Replace" Click="HandleReplace" />
       <ButtonToolItem Text="Validate" Click="HandleValidate" />
       <ButtonToolItem Text="Split" Click="HandleSplit" />
-		</ToolBar>
-	</Form.ToolBar>
+    </ToolBar>
+  </Form.ToolBar>
 </Form>
