@@ -74,40 +74,56 @@ namespace RegexTestBench
             }
             catch (RegexMatchTimeoutException)
             {
-                MessageBox.Show("The pattern matching ran longer than the maximum allowed time.\n" +
-                    "Check the Timeout setting (by default it is 2 seconds).", "Regex Timeout",
-                    MessageBoxButtons.OK,
-                    MessageBoxType.Error,
-                    MessageBoxDefaultButton.OK);
+                ShowTimeoutErrorMessage();
             }
         }
 
         protected void HandleReplace(object sender, EventArgs e)
         {
             SaveHistory();
-            MessageBox.Show("I was clicked!");
+            try
+            {
+                RunMatch();
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                ShowTimeoutErrorMessage();
+            }
         }
 
         protected void HandleValidate(object sender, EventArgs e)
         {
             SaveHistory();
-            MessageBox.Show("I was clicked!");
+            try
+            {
+                RunMatch();
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                ShowTimeoutErrorMessage();
+            }
         }
 
         protected void HandleSplit(object sender, EventArgs e)
         {
             SaveHistory();
-            MessageBox.Show("I was clicked!");
+            try
+            {
+                RunMatch();
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                ShowTimeoutErrorMessage();
+            }
         }
 
-        protected void HandleAbout(object sender, EventArgs e)
+        private static void ShowTimeoutErrorMessage()
         {
-            new AboutDialog().ShowDialog(this);
-        }
-
-        protected void HandleQuit(object sender, EventArgs e)
-        {
-            Application.Instance.Quit();
+            MessageBox.Show("The pattern matching ran longer than the maximum allowed time.\n" +
+                "Check the Timeout setting (by default it is 2 seconds).", "Regex Timeout",
+                MessageBoxButtons.OK,
+                MessageBoxType.Error,
+                MessageBoxDefaultButton.OK);
         }
 
         private void HandleResultExplorerSelectedItemChanged(object sender, EventArgs e)
