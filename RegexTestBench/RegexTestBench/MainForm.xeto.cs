@@ -5,6 +5,7 @@ using Eto.Forms;
 using Eto.Drawing;
 using Eto.Serialization.Xaml;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace RegexTestBench
 {
@@ -27,6 +28,8 @@ namespace RegexTestBench
         private readonly CheckBox chkSingleLine;
         private readonly NumericStepper nudTimeout;
         private readonly TreeGridView tvwResultExplorer;
+        private readonly Label lblStatusMessage;
+        private readonly Label lblPosition;
 
         private readonly LinkedList<RegexPattern> patternHistory = new LinkedList<RegexPattern>();
         private readonly LinkedList<string> inputHistory = new LinkedList<string>();
@@ -51,6 +54,8 @@ namespace RegexTestBench
             chkSingleLine = FindChild<CheckBox>("chkSingleLine");
             nudTimeout = FindChild<NumericStepper>("nudTimeout");
             tvwResultExplorer = FindChild<TreeGridView>("tvwResultExplorer");
+            lblStatusMessage = FindChild<Label>("lblStatusMessage");
+            lblPosition = FindChild<Label>("lblPosition");
 
             tvwResultExplorer.ShowHeader = false;
             tvwResultExplorer.Columns.Add(new GridColumn()
@@ -63,7 +68,18 @@ namespace RegexTestBench
         protected void HandleMatch(object sender, EventArgs e)
         {
             SaveHistory();
-            RunMatch();
+            try
+            {
+                RunMatch();
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                MessageBox.Show("The pattern matching ran longer than the maximum allowed time.\n" +
+                    "Check the Timeout setting (by default it is 2 seconds).", "Regex Timeout",
+                    MessageBoxButtons.OK,
+                    MessageBoxType.Error,
+                    MessageBoxDefaultButton.OK);
+            }
         }
 
         protected void HandleReplace(object sender, EventArgs e)
@@ -103,6 +119,7 @@ namespace RegexTestBench
             txtMatchValue.Text = capture.Value;
             txtInputText.Selection = new Range<int>(capture.Index, capture.Index + capture.Length - 1);
             txtInputText.Focus();
+            lblPosition.Text = $"Position: {capture.Index} Length: {capture.Length}";
         }
 
         private void HandlePatternHistorySelectedIndexChanged(object sender, EventArgs e)
@@ -141,37 +158,13 @@ namespace RegexTestBench
             RegexOptions regexOptions = GetRegexOptions(pattern);
             Regex regex = new Regex(pattern.Pattern, regexOptions, TimeSpan.FromMilliseconds(pattern.Timeout));
             var groupNames = regex.GetGroupNames();
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
             MatchCollection matches = regex.Matches(txtInputText.Text);
+            stopwatch.Stop();
+            string match = matches.Count == 1 ? "Match" : "Matches";
+            lblStatusMessage.Text = $"{matches.Count} {match}, {stopwatch.Elapsed.TotalMilliseconds} ms";
             PopulateResultExplorer(matches, groupNames);
-        }
-
-        private void PopulateResultExplorer(MatchCollection matches, string[] groupNames)
-        {
-            tvwResultExplorer.SuspendLayout();
-            var treeGridItemCollection = new TreeGridItemCollection();
-            foreach (Match match in matches)
-            {
-                var item = new TreeGridItem
-                {
-                    Values = new string[] { match.Value },
-                    Tag = match
-                };
-
-                foreach (string groupName in groupNames.Where(g => g != "0"))
-                {
-                    Group group = match.Groups[groupName];
-                    item.Children.Add(new TreeGridItem()
-                    {
-                        Values = new string[] { $"{groupName}: {group.Value}" },
-                        Tag = group
-                    });
-                }
-
-                treeGridItemCollection.Add(item);
-            }
-
-            tvwResultExplorer.DataStore = treeGridItemCollection;
-            tvwResultExplorer.ResumeLayout();
         }
 
         private void SaveHistory()
@@ -259,6 +252,35 @@ namespace RegexTestBench
                     });
             }
             lboInputHistory.ResumeLayout();
+        }
+
+        private void PopulateResultExplorer(MatchCollection matches, string[] groupNames)
+        {
+            tvwResultExplorer.SuspendLayout();
+            var treeGridItemCollection = new TreeGridItemCollection();
+            foreach (Match match in matches)
+            {
+                var item = new TreeGridItem
+                {
+                    Values = new string[] { match.Value },
+                    Tag = match
+                };
+
+                foreach (string groupName in groupNames.Where(g => g != "0"))
+                {
+                    Group group = match.Groups[groupName];
+                    item.Children.Add(new TreeGridItem()
+                    {
+                        Values = new string[] { $"{groupName}: {group.Value}" },
+                        Tag = group
+                    });
+                }
+
+                treeGridItemCollection.Add(item);
+            }
+
+            tvwResultExplorer.DataStore = treeGridItemCollection;
+            tvwResultExplorer.ResumeLayout();
         }
     }
 }
