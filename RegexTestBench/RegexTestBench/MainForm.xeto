@@ -174,7 +174,7 @@
                   </TableRow>
                   <TableRow>
                     <TableCell>
-                      <Splitter Panel2MinimumSize="35" FixedPanel="Panel2" Orientation="Vertical">
+                      <Splitter ID="splResultExplorer" Panel2MinimumSize="35" FixedPanel="Panel2" Orientation="Vertical">
                         <Splitter.Panel1>
                           <TreeGridView ID="tvwResultExplorer" SelectedItemChanged="HandleResultExplorerSelectedItemChanged">
                           </TreeGridView>

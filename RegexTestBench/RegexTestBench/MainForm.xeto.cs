@@ -11,6 +11,7 @@ namespace RegexTestBench
 {
     public class MainForm : Form
     {
+        #region Controls
         private readonly TextArea txtRegexPattern;
         private readonly TextArea txtReplacementString;
         private readonly TextArea txtInputText;
@@ -27,9 +28,11 @@ namespace RegexTestBench
         private readonly CheckBox chkRightToLeft;
         private readonly CheckBox chkSingleLine;
         private readonly NumericStepper nudTimeout;
+        private readonly Splitter splResultExplorer;
         private readonly TreeGridView tvwResultExplorer;
         private readonly Label lblStatusMessage;
         private readonly Label lblPosition;
+        #endregion // Controls
 
         private readonly LinkedList<RegexPattern> patternHistory = new LinkedList<RegexPattern>();
         private readonly LinkedList<string> inputHistory = new LinkedList<string>();
@@ -56,6 +59,7 @@ namespace RegexTestBench
         public MainForm()
         {
             XamlReader.Load(this);
+            #region Initialize Controls
             txtRegexPattern = FindChild<TextArea>("txtRegexPattern");
             txtReplacementString = FindChild<TextArea>("txtReplacementString");
             txtInputText = FindChild<TextArea>("txtInputText");
@@ -72,19 +76,14 @@ namespace RegexTestBench
             chkRightToLeft = FindChild<CheckBox>("chkRightToLeft");
             chkSingleLine = FindChild<CheckBox>("chkSingleLine");
             nudTimeout = FindChild<NumericStepper>("nudTimeout");
+            splResultExplorer = FindChild<Splitter>("splResultExplorer");
             tvwResultExplorer = FindChild<TreeGridView>("tvwResultExplorer");
             lblStatusMessage = FindChild<Label>("lblStatusMessage");
             lblPosition = FindChild<Label>("lblPosition");
-
-            tvwResultExplorer.ShowHeader = false;
-            tvwResultExplorer.Columns.Add(new GridColumn()
-            {
-                HeaderText = "Match",
-                DataCell = new TextBoxCell(0)
-            });
+            #endregion // Initialize Controls
         }
 
-        protected void HandleMatch(object sender, EventArgs e)
+        private void HandleMatch(object sender, EventArgs e)
         {
             SaveHistory();
             try
@@ -97,7 +96,20 @@ namespace RegexTestBench
             }
         }
 
-        protected void HandleReplace(object sender, EventArgs e)
+        private void HandleReplace(object sender, EventArgs e)
+        {
+            SaveHistory();
+            try
+            {
+                RunReplace();
+            }
+            catch (RegexMatchTimeoutException)
+            {
+                ShowTimeoutErrorMessage();
+            }
+        }
+
+        private void HandleValidate(object sender, EventArgs e)
         {
             SaveHistory();
             try
@@ -110,20 +122,7 @@ namespace RegexTestBench
             }
         }
 
-        protected void HandleValidate(object sender, EventArgs e)
-        {
-            SaveHistory();
-            try
-            {
-                RunMatch();
-            }
-            catch (RegexMatchTimeoutException)
-            {
-                ShowTimeoutErrorMessage();
-            }
-        }
-
-        protected void HandleSplit(object sender, EventArgs e)
+        private void HandleSplit(object sender, EventArgs e)
         {
             SaveHistory();
             try
@@ -147,10 +146,9 @@ namespace RegexTestBench
 
         private void HandleResultExplorerSelectedItemChanged(object sender, EventArgs e)
         {
-            if (tvwResultExplorer.SelectedItem == null)
+            if (!((tvwResultExplorer.SelectedItem as TreeGridItem)?.Tag is Capture capture))
                 return;
 
-            Capture capture = ((tvwResultExplorer.SelectedItem as TreeGridItem).Tag as Capture);
             txtMatchValue.Text = capture.Value;
             txtInputText.Selection = new Range<int>(capture.Index, capture.Index + capture.Length - 1);
             txtInputText.Focus();
@@ -196,7 +194,17 @@ namespace RegexTestBench
             stopwatch.Stop();
             string match = matches.Count == 1 ? "Match" : "Matches";
             lblStatusMessage.Text = $"{matches.Count} {match}, {stopwatch.Elapsed.TotalMilliseconds} ms";
-            PopulateResultExplorer(matches, groupNames);
+            PopulateResultExplorerMatch(matches, groupNames);
+        }
+
+        private void RunReplace()
+        {
+            Stopwatch stopwatch = new Stopwatch();
+            stopwatch.Start();
+            string replacedText = CurrentRegex.Replace(txtInputText.Text, txtReplacementString.Text);
+            stopwatch.Stop();
+            lblStatusMessage.Text = $"{stopwatch.Elapsed.TotalMilliseconds} ms";
+            PopulateResultExplorerReplace(replacedText);
         }
 
         private void SaveHistory()
@@ -246,13 +254,23 @@ namespace RegexTestBench
             lboInputHistory.ResumeLayout();
         }
 
-        private void PopulateResultExplorer(MatchCollection matches, string[] groupNames)
+        private void PopulateResultExplorerMatch(MatchCollection matches, string[] groupNames)
         {
+            txtMatchValue.Text = string.Empty;
+            splResultExplorer.Position = splResultExplorer.Height - 30;
             tvwResultExplorer.SuspendLayout();
+            tvwResultExplorer.ShowHeader = false;
+            tvwResultExplorer.Columns.Clear();
+            tvwResultExplorer.Columns.Add(new GridColumn()
+            {
+                HeaderText = "Match",
+                DataCell = new TextBoxCell(0)
+            });
+
             var treeGridItemCollection = new TreeGridItemCollection();
             foreach (Match match in matches)
             {
-                var item = new TreeGridItem
+                var item = new TreeGridItem()
                 {
                     Values = new string[] { match.Value },
                     Tag = match
@@ -273,6 +291,14 @@ namespace RegexTestBench
 
             tvwResultExplorer.DataStore = treeGridItemCollection;
             tvwResultExplorer.ResumeLayout();
+        }
+
+        private void PopulateResultExplorerReplace(string replacedText)
+        {
+            tvwResultExplorer.DataStore = new TreeGridItemCollection();
+            lblPosition.Text = string.Empty;
+            txtMatchValue.Text = replacedText;
+            splResultExplorer.Position = 0;
         }
     }
 }
