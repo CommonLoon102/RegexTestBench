@@ -113,9 +113,83 @@
                   </TableRow>
                   <TableRow>
                     <TableCell>
-                      <Panel BackgroundColor="LightGrey">
-                        <Label>Cheat Sheet</Label>
-                      </Panel>
+                      <TabControl BackgroundColor="WhiteSmoke">
+                        <TabPage Text="Characters">
+                          <StackLayout Orientation="Vertical">
+                            <Label>Any character .</Label>
+                            <Label>Word character \w</Label>
+                            <Label>Non-word character \W</Label>
+                            <Label>Digit \d</Label>
+                            <Label>Non-digit \D</Label>
+                            <Label>Whitespace \s</Label>
+                            <Label>Non-whitespace \S</Label>
+                            <Label>Unicode category group \p{Class}</Label>
+                            <Label>Negative unicode category group \P{Class}</Label>
+                            <Label>Character group [0-9A-F]</Label>
+                            <Label>Negative character group [^0-9A-F]</Label>
+                            <Label>Character class Subtraction [a-z-[aeiou]]</Label>
+                          </StackLayout>
+                        </TabPage>
+                        <TabPage Text="Groups">
+                          <StackLayout Orientation="Vertical">
+                            <Label>Numbered capture ()</Label>
+                            <Label>Noncapturing group (?:)</Label>
+                            <Label>Named capture (?&lt;Name&gt;)</Label>
+                            <Label>Balancing group (?&lt;Name1-Name2&gt;)</Label>
+                            <Label>Match suffix but exclude it (?=)</Label>
+                            <Label>Match prefix but exclude it (?&lt;=)</Label>
+                            <Label>Match if suffix is not present (?!)</Label>
+                            <Label>Match if prefix is not present (?&lt;!)</Label>
+                            <Label>Greedy subexpression (?&gt;)</Label>
+                            <Label>Comment (?#)</Label>
+                          </StackLayout>
+                        </TabPage>
+                        <TabPage Text="Special">
+                          <StackLayout Orientation="Vertical">
+                            <Label>Tab \t</Label>
+                            <Label>New line \n</Label>
+                            <Label>Carriage return \r</Label>
+                            <Label>Vertical tab \v</Label>
+                            <Label>Form feed \f</Label>
+                            <Label>Backspace \b</Label>
+                            <Label>Bell \a</Label>
+                            <Label>ASCII Octal \042</Label>
+                            <Label>ASCII Hex \x42</Label>
+                            <Label>Unicode \u0042</Label>
+                          </StackLayout>
+                        </TabPage>
+                        <TabPage Text="Position">
+                          <StackLayout Orientation="Vertical">
+                            <GroupBox Text="Depends on multiline option:">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Beginning of string or line ^</Label>
+                                <Label>End of string or line $</Label>
+                              </StackLayout>
+                            </GroupBox>
+                            <GroupBox Text="Ignores the multiline option:">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Ignores the multiline option:</Label>
+                                <Label>Beginning of string \A</Label>
+                                <Label>End of string or before newline at end \Z</Label>
+                                <Label>End of string \z</Label>
+                                <Label>Beginning of current search \G</Label>
+                                <Label>First or last character in word \b</Label>
+                                <Label>Not first or last character in word \B</Label>
+                              </StackLayout>
+                            </GroupBox>
+                          </StackLayout>
+                        </TabPage>
+                        <TabPage Text="Misc">
+                        </TabPage>
+                        <TabPage Text="Repetitions">
+                        </TabPage>
+                        <TabPage Text="Options">
+                        </TabPage>
+                        <TabPage Text="Alternatives">
+                        </TabPage>
+                        <TabPage Text="Substitutions">
+                        </TabPage>
+                      </TabControl>
                     </TableCell>
                   </TableRow>
                 </TableLayout>
