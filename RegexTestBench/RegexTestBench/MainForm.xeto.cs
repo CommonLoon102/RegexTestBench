@@ -34,6 +34,23 @@ namespace RegexTestBench
         private readonly LinkedList<RegexPattern> patternHistory = new LinkedList<RegexPattern>();
         private readonly LinkedList<string> inputHistory = new LinkedList<string>();
 
+        private RegexPattern CurrentPattern =>
+            new RegexPattern()
+            {
+                Pattern = txtRegexPattern.Text,
+                ReplacementText = txtReplacementString.Text,
+                IsCompiled = chkCompiled.Checked ?? false,
+                IsCultureInvariant = chkCultureInvariant.Checked ?? false,
+                IsEcmaScript = chkEcmaScript.Checked ?? false,
+                IsExplicitCapture = chkExplicitCapture.Checked ?? false,
+                IsIgnoreWhite = chkIgnoreWhite.Checked ?? false,
+                IsIgnoreCase = chkIgnoreCase.Checked ?? false,
+                IsMultiline = chkMultiline.Checked ?? false,
+                IsRightToLeft = chkRightToLeft.Checked ?? false,
+                IsSingleLine = chkSingleLine.Checked ?? false,
+                Timeout = (int)nudTimeout.Value
+            };
+
         public MainForm()
         {
             XamlReader.Load(this);
@@ -170,9 +187,7 @@ namespace RegexTestBench
 
         private void RunMatch()
         {
-            RegexPattern pattern = GetPattern();
-            RegexOptions regexOptions = GetRegexOptions(pattern);
-            Regex regex = new Regex(pattern.Pattern, regexOptions, TimeSpan.FromMilliseconds(pattern.Timeout));
+            Regex regex = CurrentPattern.Regex;
             var groupNames = regex.GetGroupNames();
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -185,57 +200,19 @@ namespace RegexTestBench
 
         private void SaveHistory()
         {
-            RegexPattern pattern = GetPattern();
+            RegexPattern pattern = CurrentPattern;
 
-            patternHistory.AddFirst(pattern);
-            UpdatePatternHistoryListBox();
-
-            inputHistory.AddFirst(txtInputText.Text);
-            UpdateInputHistoryListBox();
-        }
-
-        private RegexPattern GetPattern()
-        {
-            return new RegexPattern()
+            if (!patternHistory.Any(ph => ph.IsSame(pattern)))
             {
-                Pattern = txtRegexPattern.Text,
-                ReplacementText = txtReplacementString.Text,
-                IsCompiled = chkCompiled.Checked ?? false,
-                IsCultureInvariant = chkCultureInvariant.Checked ?? false,
-                IsEcmaScript = chkEcmaScript.Checked ?? false,
-                IsExplicitCapture = chkExplicitCapture.Checked ?? false,
-                IsIgnoreWhite = chkIgnoreWhite.Checked ?? false,
-                IsIgnoreCase = chkIgnoreCase.Checked ?? false,
-                IsMultiline = chkMultiline.Checked ?? false,
-                IsRightToLeft = chkRightToLeft.Checked ?? false,
-                IsSingleLine = chkSingleLine.Checked ?? false,
-                Timeout = (int)nudTimeout.Value
-            };
-        }
+                patternHistory.AddFirst(pattern);
+                UpdatePatternHistoryListBox();
+            }
 
-        private RegexOptions GetRegexOptions(RegexPattern pattern)
-        {
-            RegexOptions regexOptions = RegexOptions.None;
-            if (pattern.IsCompiled)
-                regexOptions |= RegexOptions.Compiled;
-            if (pattern.IsCultureInvariant)
-                regexOptions |= RegexOptions.CultureInvariant;
-            if (pattern.IsEcmaScript)
-                regexOptions |= RegexOptions.ECMAScript;
-            if (pattern.IsExplicitCapture)
-                regexOptions |= RegexOptions.ExplicitCapture;
-            if (pattern.IsIgnoreCase)
-                regexOptions |= RegexOptions.IgnoreCase;
-            if (pattern.IsIgnoreWhite)
-                regexOptions |= RegexOptions.IgnorePatternWhitespace;
-            if (pattern.IsMultiline)
-                regexOptions |= RegexOptions.Multiline;
-            if (pattern.IsRightToLeft)
-                regexOptions |= RegexOptions.RightToLeft;
-            if (pattern.IsSingleLine)
-                regexOptions |= RegexOptions.Singleline;
-
-            return regexOptions;
+            if (!inputHistory.Any(ih => ih == txtInputText.Text))
+            {
+                inputHistory.AddFirst(txtInputText.Text);
+                UpdateInputHistoryListBox();
+            }
         }
 
         private void UpdatePatternHistoryListBox()
