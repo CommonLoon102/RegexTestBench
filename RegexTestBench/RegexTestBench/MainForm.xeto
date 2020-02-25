@@ -4,164 +4,384 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Title="Regex Test Bench"
 	ClientSize="1000, 720"
-	MinimumSize="800, 720"
+	MinimumSize="1000, 720"
 	Padding="10"
 	>
 
-  <Splitter FixedPanel="Panel1" Panel1MinimumSize="300" Panel2MinimumSize="350" SplitterWidth="10" Orientation="Vertical">
-    <Splitter.Panel1>
-      <Splitter FixedPanel="Panel2" Panel1MinimumSize="300" Panel2MinimumSize="200" Orientation="Horizontal">
-        <Splitter.Panel1>
-          <Splitter FixedPanel="Panel1" Panel1MinimumSize="150" Panel2MinimumSize="120" Orientation="Horizontal">
-            <Splitter.Panel1>
-              <TableLayout>
-                <TableRow>
-                  <TableCell>
-                    <Label BackgroundColor="CornflowerBlue" TextColor="White" TextAlignment="Center">
-                      Pattern History
-                    </Label>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                  <ListBox>
-                    <ListItem>Pattern History1</ListItem>
-                  </ListBox>
-                  </TableCell>
-                </TableRow>
-              </TableLayout>
-            </Splitter.Panel1>
-            <Splitter.Panel2>
-              <TableLayout>
-                <TableRow>
-                  <TableCell>
-                    <Label BackgroundColor="CornflowerBlue" TextColor="White" TextAlignment="Center">
-                      Regex Pattern
-                    </Label>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <TextArea>
-                      My Regex Pattern
-                    </TextArea>
-                  </TableCell>
-                </TableRow>
-              </TableLayout>
-            </Splitter.Panel2>
-          </Splitter>
-        </Splitter.Panel1>
-        <Splitter.Panel2>
-          <TableLayout Width="400">
-            <TableRow>
-              <TableCell>
-                <Label BackgroundColor="CornflowerBlue" TextColor="White" TextAlignment="Center">
-                  Cheat Sheet
-                </Label>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Panel BackgroundColor="LightGrey">
-                  <Label>Cheat Sheet</Label>
-                </Panel>
-              </TableCell>
-            </TableRow>
-          </TableLayout>
-        </Splitter.Panel2>
-      </Splitter>
-    </Splitter.Panel1>
-    <Splitter.Panel2>
-      <Splitter FixedPanel="Panel2" Panel1MinimumSize="300" Panel2MinimumSize="200" Orientation="Horizontal">
-        <Splitter.Panel1>
-          <Splitter FixedPanel="Panel1" Panel1MinimumSize="150" Panel2MinimumSize="120" Orientation="Horizontal">
-            <Splitter.Panel1>
-              <TableLayout>
-                <TableRow>
-                  <TableCell>
-                    <Label BackgroundColor="CornflowerBlue" TextColor="White" TextAlignment="Center">
-                      Input History
-                    </Label>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <ListBox>
-                      <ListItem>
-                        Input History1
-                      </ListItem>
-                    </ListBox>
-                  </TableCell>
-                </TableRow>
-              </TableLayout>
-            </Splitter.Panel1>
-            <Splitter.Panel2>
-              <TableLayout>
-                <TableRow>
-                  <TableCell>
-                    <Label BackgroundColor="CornflowerBlue" TextColor="White" TextAlignment="Center">
-                      Input Text
-                    </Label>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>
-                    <TextArea>
-                      Input text
-                    </TextArea>
-                  </TableCell>
-                </TableRow>
-              </TableLayout>
-            </Splitter.Panel2>
-          </Splitter>
-        </Splitter.Panel1>
-        <Splitter.Panel2>
-          <TableLayout Width="400">
-            <TableRow>
-              <TableCell>
-                <Label BackgroundColor="CornflowerBlue" TextColor="White" TextAlignment="Center">
-                  Result Explorer
-                </Label>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Splitter Panel2MinimumSize="35" FixedPanel="Panel2" Orientation="Vertical">
+  <TableLayout>
+    <TableRow ScaleHeight="True">
+      <TableCell>
+        <Splitter FixedPanel="Panel1" Panel1MinimumSize="300" Panel2MinimumSize="350" SplitterWidth="10" Orientation="Vertical">
+          <Splitter.Panel1>
+            <Splitter FixedPanel="Panel2" Panel1MinimumSize="300" Panel2MinimumSize="200" Orientation="Horizontal">
+              <Splitter.Panel1>
+                <Splitter FixedPanel="Panel1" Panel1MinimumSize="150" Panel2MinimumSize="120" Orientation="Horizontal">
                   <Splitter.Panel1>
-                    <TreeView>
-                    </TreeView>
+                    <TableLayout>
+                      <TableRow>
+                        <TableCell>
+                          <Label BackgroundColor="CornflowerBlue" TextColor="White" TextAlignment="Center">
+                            Pattern History
+                          </Label>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                        <ListBox ID="lboPatternHistory" SelectedIndexChanged="HandlePatternHistorySelectedIndexChanged">
+                        </ListBox>
+                        </TableCell>
+                      </TableRow>
+                    </TableLayout>
                   </Splitter.Panel1>
                   <Splitter.Panel2>
-                    <TextArea Height="30" ReadOnly="True"></TextArea>
+                    <TableLayout>
+                      <TableRow>
+                        <TableCell>
+                          <Label BackgroundColor="CornflowerBlue" TextColor="White" TextAlignment="Center">
+                            Regex Pattern
+                          </Label>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow ScaleHeight="True">
+                        <TableCell ScaleWidth="True">
+                          <TextArea ID="txtRegexPattern">
+                          </TextArea>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <Label BackgroundColor="CornflowerBlue" TextColor="White" TextAlignment="Center">
+                            Replacement String
+                          </Label>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <TextArea ID="txtReplacementString">
+                          </TextArea>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <TableLayout>
+                            <TableRow>
+                              <TableCell>
+                                <StackLayout Padding="5,1,1,1" Orientation="Vertical">
+                                  <CheckBox ID="chkIgnoreCase" ToolTip="Don't distinguish between upper and lower case">Ignore Case</CheckBox>
+                                  <CheckBox ID="chkSingleLine" ToolTip="Make period match \n too">Single Line</CheckBox>
+                                  <CheckBox ID="chkCultureInvariant" ToolTip="Make match insensitive to the culture">Culture Invariant</CheckBox>
+                                  <CheckBox ID="chkExplicitCapture" ToolTip="Capture groups only if explicitly numbered or named">Explicit Capture</CheckBox>
+                                  <CheckBox ID="chkEcmaScript" ToolTip="ECMA Script compliant, can only use with ignore case and multiline">ECMA Script</CheckBox>
+                                </StackLayout>
+                              </TableCell>
+                              <TableCell>
+                                <StackLayout Padding="5,1,1,1" Orientation="Vertical">
+                                  <CheckBox ID="chkIgnoreWhite" ToolTip="Ignore unescaped whitespace, allow comments after #">Ignore White</CheckBox>
+                                  <CheckBox ID="chkMultiline" ToolTip="^ and $ will match the entire string instead of lines" Checked="True">Multiline</CheckBox>
+                                  <CheckBox ID="chkRightToLeft" ToolTip="Search from right to left">Right to Left</CheckBox>
+                                  <CheckBox ID="chkCompiled" ToolTip="Compile to assembly, slower startup, faster search" Checked="True">Compiled</CheckBox>
+                                </StackLayout>
+                              </TableCell>
+                              <TableCell>
+                                <StackLayout ToolTip="Stop search after specified milliseconds" Padding="20,1,1,1" Orientation="Horizontal">
+                                  <Label>Timeout</Label>
+                                  <Panel Padding="5,0,5,0">
+                                    <NumericStepper ID="nudTimeout"
+                                                    MinValue="1"
+                                                    MaxValue="100000"
+                                                    MaximumDecimalPlaces="0"
+                                                    Value="2000"
+                                                    Increment="1000"
+                                                    Width="120"/>
+                                  </Panel>
+                                  <Label>ms</Label>
+                                  </StackLayout>
+                              </TableCell>
+                            </TableRow>
+                          </TableLayout>
+                        </TableCell>
+                      </TableRow>
+                    </TableLayout>
                   </Splitter.Panel2>
                 </Splitter>
-              </TableCell>
-            </TableRow>
-          </TableLayout>
-        </Splitter.Panel2>
-      </Splitter>
-    </Splitter.Panel2>
-  </Splitter>
+              </Splitter.Panel1>
+              <Splitter.Panel2>
+                <TableLayout Width="400">
+                  <TableRow>
+                    <TableCell>
+                      <Label BackgroundColor="CornflowerBlue" TextColor="White" TextAlignment="Center">
+                        Quick Reference
+                      </Label>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>
+                      <TabControl BackgroundColor="WhiteSmoke">
+                        <TabPage Text="Characters">
+                          <StackLayout Orientation="Vertical">
+                            <Label>Any character .</Label>
+                            <Label>Word character \w</Label>
+                            <Label>Non-word character \W</Label>
+                            <Label>Digit \d</Label>
+                            <Label>Non-digit \D</Label>
+                            <Label>Whitespace \s</Label>
+                            <Label>Non-whitespace \S</Label>
+                            <Label>Unicode category group \p{Class}</Label>
+                            <Label>Negative unicode category group \P{Class}</Label>
+                            <Label>Character group [0-9A-F]</Label>
+                            <Label>Negative character group [^0-9A-F]</Label>
+                            <Label>Character class subtraction [a-z-[aeiou]]</Label>
+                          </StackLayout>
+                        </TabPage>
+                        <TabPage Text="Groups">
+                          <StackLayout Orientation="Vertical">
+                            <GroupBox Text="Capturing">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Matched subexpression ()</Label>
+                                <Label>Named matched subexpression (?&lt;GroupName&gt;)</Label>
+                                <Label>Balancing group (?&lt;GroupName1-GroupName2&gt;)</Label>
+                              </StackLayout>
+                            </GroupBox>
+                            <GroupBox Text="Noncapturing">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Noncapturing group (?:)</Label>
+                                <Label>Zero-width positive lookahead assertion (?=)</Label>
+                                <Label>Zero-width negative lookahead assertion (?!)</Label>
+                                <Label>Zero-width positive lookbehind assertion (?&lt;=)</Label>
+                                <Label>Zero-width negative lookbehind assertion (?&lt;!)</Label>
+                                <Label>Atomic group (?&gt;)</Label>
+                              </StackLayout>
+                            </GroupBox>
+                          </StackLayout>
+                        </TabPage>
+                        <TabPage Text="Special">
+                          <StackLayout Orientation="Vertical">
+                            <Label>Tab \t</Label>
+                            <Label>New line \n</Label>
+                            <Label>Carriage return \r</Label>
+                            <Label>Vertical tab \v</Label>
+                            <Label>Form feed \f</Label>
+                            <Label>Backspace \b</Label>
+                            <Label>Bell \a</Label>
+                            <Label>Escape \e</Label>
+                            <Label>ASCII Octal \042</Label>
+                            <Label>ASCII Hex \x42</Label>
+                            <Label>Unicode \u0042</Label>
+                          </StackLayout>
+                        </TabPage>
+                        <TabPage Text="Position">
+                          <StackLayout Orientation="Vertical">
+                            <GroupBox Text="Depends on multiline option:">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Beginning of string or line ^</Label>
+                                <Label>End of string or line $</Label>
+                              </StackLayout>
+                            </GroupBox>
+                            <GroupBox Text="Ignores the multiline option:">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Beginning of string \A</Label>
+                                <Label>End of string or before newline at end \Z</Label>
+                                <Label>End of string \z</Label>
+                                <Label>Beginning of current search \G</Label>
+                                <Label>First or last character in word \b</Label>
+                                <Label>Not first or last character in word \B</Label>
+                              </StackLayout>
+                            </GroupBox>
+                          </StackLayout>
+                        </TabPage>
+                        <TabPage Text="Misc">
+                          <StackLayout Orientation="Vertical">
+                            <GroupBox Text="Conditional expressions">
+                              <StackLayout Orientation="Vertical">
+                                <Label>The False clause is optional</Label>
+                                <Label>Match an expression (?(expression)True|False)</Label>
+                                <Label>Match a numbered group (?(1)True|False)</Label>
+                                <Label>Match a named group (?(GroupName)True|False)</Label>
+                              </StackLayout>
+                            </GroupBox>
+                            <GroupBox Text="Backreference a group">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Numbered \1</Label>
+                                <Label>Named \k&lt;GroupName&gt;</Label>
+                              </StackLayout>
+                            </GroupBox>
+                          </StackLayout>
+                        </TabPage>
+                        <TabPage Text="Comments">
+                          <StackLayout Orientation="Vertical">
+                            <Label>If the Ignore Whitespace option is turned on, any text following</Label>
+                            <Label>the # sign is interpreted as a comment until the end of the line</Label>
+                            <Label>(X-mode), or you can enclose comments in a group at any point.</Label>
+                            <GroupBox Text="Comments">
+                              <StackLayout Orientation="Vertical">
+                                <Label>X-mode comment #Comment</Label>
+                                <Label>Comment group (?#Comment)</Label>
+                              </StackLayout>
+                            </GroupBox>
+                          </StackLayout>
+                        </TabPage>
+                        <TabPage Text="Repetitions">
+                          <StackLayout Orientation="Vertical">
+                            <GroupBox Text="Greedy quantifiers">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Zero or more *</Label>
+                                <Label>One or more +</Label>
+                                <Label>Zero or once ?</Label>
+                              </StackLayout>
+                            </GroupBox>
+                            <GroupBox Text="Lazy quantifiers (as few as possible)">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Zero or more *?</Label>
+                                <Label>One or more +?</Label>
+                                <Label>Zero or once ??</Label>
+                              </StackLayout>
+                            </GroupBox>
+                            <GroupBox Text="Numbered quantifiers">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Exactly n {n}</Label>
+                                <Label>At least n {n}</Label>
+                                <Label>Between n and m {n,m}</Label>
+                              </StackLayout>
+                            </GroupBox>
+                          </StackLayout>
+                        </TabPage>
+                        <TabPage Text="Options">
+                          <StackLayout Orientation="Vertical">
+                            <Label>Within a new noncapturing group (?imsnx:)</Label>
+                            <Label>Until the end of enclosing group (?imsnx)</Label>
+                            <GroupBox Text="Options">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Ignore case i</Label>
+                                <Label>Multiline m</Label>
+                                <Label>Single line s</Label>
+                                <Label>Explicit capture n</Label>
+                                <Label>Ignore pattern whitespace x</Label>
+                              </StackLayout>
+                            </GroupBox>
+                            <GroupBox Text="Examples">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Everything on (?imsnx-:pattern)</Label>
+                                <Label>Everything off (?-imsnx:pattern)</Label>
+                                <Label>Ignore case off, multiline on, rest from global (?m-i:pattern)</Label>
+                              </StackLayout>
+                            </GroupBox>
+                          </StackLayout>
+                        </TabPage>
+                        <TabPage Text="Alternatives">
+                          <StackLayout Orientation="Vertical">
+                            <Label>Match either item One|Two|Three</Label>
+                            <Label>Match either item in a group (One|Two|Three)</Label>
+                            <Label>Match either item in a non-capturing group (?:One|Two|Three)</Label>
+                          </StackLayout>
+                        </TabPage>
+                        <TabPage Text="Substitutions">
+                          <StackLayout Orientation="Vertical">
+                            <Label>Substitutions are used to build a replacement string, which is used for the Replace operation.</Label>
+                            <GroupBox Text="Substitutions">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Numbered group $1</Label>
+                                <Label>Named group ${GroupName}</Label>
+                                <Label>The $ literal $$</Label>
+                                <Label>Entire match $&amp;</Label>
+                                <Label>Text prior to the match $`</Label>
+                                <Label>Text following the match $'</Label>
+                                <Label>Last group captured $+</Label>
+                                <Label>Entire input string $_</Label>
+                              </StackLayout>
+                            </GroupBox>
+                          </StackLayout>
+                        </TabPage>
+                      </TabControl>
+                    </TableCell>
+                  </TableRow>
+                </TableLayout>
+              </Splitter.Panel2>
+            </Splitter>
+          </Splitter.Panel1>
+          <Splitter.Panel2>
+            <Splitter FixedPanel="Panel2" Panel1MinimumSize="300" Panel2MinimumSize="200" Orientation="Horizontal">
+              <Splitter.Panel1>
+                <Splitter FixedPanel="Panel1" Panel1MinimumSize="150" Panel2MinimumSize="120" Orientation="Horizontal">
+                  <Splitter.Panel1>
+                    <TableLayout>
+                      <TableRow>
+                        <TableCell>
+                          <Label BackgroundColor="CornflowerBlue" TextColor="White" TextAlignment="Center">
+                            Input History
+                          </Label>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <ListBox ID="lboInputHistory" SelectedIndexChanged="HandleInputHistorySelectedIndexChanged">
+                          </ListBox>
+                        </TableCell>
+                      </TableRow>
+                    </TableLayout>
+                  </Splitter.Panel1>
+                  <Splitter.Panel2>
+                    <TableLayout>
+                      <TableRow>
+                        <TableCell>
+                          <Label BackgroundColor="CornflowerBlue" TextColor="White" TextAlignment="Center">
+                            Input Text
+                          </Label>
+                        </TableCell>
+                      </TableRow>
+                      <TableRow>
+                        <TableCell>
+                          <TextArea ID="txtInputText">
+                          </TextArea>
+                        </TableCell>
+                      </TableRow>
+                    </TableLayout>
+                  </Splitter.Panel2>
+                </Splitter>
+              </Splitter.Panel1>
+              <Splitter.Panel2>
+                <TableLayout Width="400">
+                  <TableRow>
+                    <TableCell>
+                      <Label BackgroundColor="CornflowerBlue" TextColor="White" TextAlignment="Center">
+                        Result Explorer
+                      </Label>
+                    </TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>
+                      <Splitter ID="splResultExplorer" Panel2MinimumSize="35" FixedPanel="Panel2" Orientation="Vertical">
+                        <Splitter.Panel1>
+                          <TreeGridView ID="tvwResultExplorer" SelectedItemChanged="HandleResultExplorerSelectedItemChanged">
+                          </TreeGridView>
+                        </Splitter.Panel1>
+                        <Splitter.Panel2>
+                          <TextArea ID="txtMatchValue" Height="30" ReadOnly="True"></TextArea>
+                        </Splitter.Panel2>
+                      </Splitter>
+                    </TableCell>
+                  </TableRow>
+                </TableLayout>
+              </Splitter.Panel2>
+            </Splitter>
+          </Splitter.Panel2>
+        </Splitter>
+      </TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>
+        <StackLayout Padding="0,5,0,0" Orientation="Horizontal">
+          <Panel Padding="5,0,0,0"><Label ID="lblStatusMessage"></Label></Panel>
+          <Panel Padding="20,0,0,0"><Label ID="lblPosition"></Label></Panel>
+        </StackLayout>
+      </TableCell>
+    </TableRow>
+  </TableLayout>
 
-	<Form.Menu>
-		<MenuBar>
-			<ButtonMenuItem Text="F&amp;ile">
-				<ButtonMenuItem Text="Click Me!" Click="HandleClickMe" />
-			</ButtonMenuItem>
-			<MenuBar.ApplicationItems>
-				<ButtonMenuItem Text="Preferences.." Shortcut="{On Control+O, Mac=Application+Comma}" />
-			</MenuBar.ApplicationItems>
-			<MenuBar.QuitItem>
-				<ButtonMenuItem Text="Quit" Shortcut="CommonModifier+Q" Click="HandleQuit" />
-			</MenuBar.QuitItem>
-			<MenuBar.AboutItem>
-				<ButtonMenuItem Text="About..." Click="HandleAbout" />
-			</MenuBar.AboutItem>
-		</MenuBar>
-	</Form.Menu>
-	<Form.ToolBar>
-		<ToolBar>
-			<ButtonToolItem Text="Click Me!" Click="HandleClickMe" />
-		</ToolBar>
-	</Form.ToolBar>
+  <Form.ToolBar>
+    <ToolBar>
+      <ButtonToolItem Text="Match" Click="HandleMatch" />
+      <ButtonToolItem Text="Replace" Click="HandleReplace" />
+      <ButtonToolItem Text="Split" Click="HandleSplit" />
+    </ToolBar>
+  </Form.ToolBar>
 </Form>
