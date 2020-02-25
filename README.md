@@ -13,5 +13,6 @@ Cross platform Regex test tool in .NET Core
  - Publish `RegexTestBench.Wpf`
 ## Linux
 - Install the .NET Core SDK
+- You need to have GTK3 installed too
 - Git clone
 - Publish with `dotnet publish RegexTestBench/RegexTestBench.Gtk/RegexTestBench.Gtk.csproj --configuration Release --output publish --self-contained false --runtime linux-x64 --framework netcoreapp3.1`
