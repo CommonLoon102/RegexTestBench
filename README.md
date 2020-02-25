@@ -9,7 +9,7 @@ Cross platform Regex test tool in .NET Core
  - Start the app from the terminal with `dotnet RegexTestBench.Gtk.dll`
 # Compiling
 ## Windows
- - Downlaod and open the repo in Visual Studio 2019
+ - Download and open the repo in Visual Studio 2019
  - Publish `RegexTestBench.Wpf`
 ## Linux
 - Install the .NET Core SDK
