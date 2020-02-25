@@ -174,7 +174,6 @@
                             </GroupBox>
                             <GroupBox Text="Ignores the multiline option:">
                               <StackLayout Orientation="Vertical">
-                                <Label>Ignores the multiline option:</Label>
                                 <Label>Beginning of string \A</Label>
                                 <Label>End of string or before newline at end \Z</Label>
                                 <Label>End of string \z</Label>
