@@ -88,7 +88,7 @@
                                   <Panel Padding="5,0,5,0">
                                     <NumericStepper ID="nudTimeout"
                                                     MinValue="1"
-                                                    MaxValue="9999"
+                                                    MaxValue="100000"
                                                     MaximumDecimalPlaces="0"
                                                     Value="2000"
                                                     Increment="1000"
