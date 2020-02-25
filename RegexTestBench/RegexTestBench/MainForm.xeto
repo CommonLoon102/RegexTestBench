@@ -105,7 +105,7 @@
                   <TableRow>
                     <TableCell>
                       <Label BackgroundColor="CornflowerBlue" TextColor="White" TextAlignment="Center">
-                        Cheat Sheet
+                        Quick Reference
                       </Label>
                     </TableCell>
                   </TableRow>
@@ -125,7 +125,7 @@
                             <Label>Negative unicode category group \P{Class}</Label>
                             <Label>Character group [0-9A-F]</Label>
                             <Label>Negative character group [^0-9A-F]</Label>
-                            <Label>Character class Subtraction [a-z-[aeiou]]</Label>
+                            <Label>Character class subtraction [a-z-[aeiou]]</Label>
                           </StackLayout>
                         </TabPage>
                         <TabPage Text="Groups">
