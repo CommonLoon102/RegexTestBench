@@ -1,5 +1,5 @@
 # RegexTestBench
-Cross platform Regex test tool in .NET Core
+Cross-platform regex testing tool in .NET Core
 ![](https://github.com/CommonLoon102/RegexTestBench/blob/master/image/screenshot.png?raw=true)
 # Running
 ## Windows
