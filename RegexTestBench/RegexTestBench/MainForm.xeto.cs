@@ -200,6 +200,7 @@ namespace RegexTestBench
             string replacedText = CurrentRegex.Replace(txtInputText.Text, txtReplacementString.Text);
             stopwatch.Stop();
             lblStatusMessage.Text = $"{stopwatch.Elapsed.TotalMilliseconds} ms";
+            lblPosition.Text = string.Empty;
             PopulateResultExplorerReplace(replacedText);
         }
 
@@ -211,6 +212,7 @@ namespace RegexTestBench
             stopwatch.Stop();
             string part = splitTexts.Length == 1 ? "Part" : "Parts";
             lblStatusMessage.Text = $"{splitTexts.Length} {part}, {stopwatch.Elapsed.TotalMilliseconds} ms";
+            lblPosition.Text = string.Empty;
             PopulateResultExplorerSplit(splitTexts);
         }
 
@@ -295,7 +297,6 @@ namespace RegexTestBench
         private void PopulateResultExplorerReplace(string replacedText)
         {
             tvwResultExplorer.DataStore = new TreeGridItemCollection();
-            lblPosition.Text = string.Empty;
             txtMatchValue.Text = replacedText;
             splResultExplorer.Position = 0;
         }
