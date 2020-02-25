@@ -45,7 +45,6 @@
                       <TableRow ScaleHeight="True">
                         <TableCell ScaleWidth="True">
                           <TextArea ID="txtRegexPattern">
-                            My Regex Pattern
                           </TextArea>
                         </TableCell>
                       </TableRow>
@@ -59,7 +58,6 @@
                       <TableRow>
                         <TableCell>
                           <TextArea ID="txtReplacementString">
-                            My Replacement String
                           </TextArea>
                         </TableCell>
                       </TableRow>
@@ -329,7 +327,6 @@
                       <TableRow>
                         <TableCell>
                           <TextArea ID="txtInputText">
-                            Input text
                           </TextArea>
                         </TableCell>
                       </TableRow>
