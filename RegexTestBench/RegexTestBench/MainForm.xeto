@@ -132,16 +132,23 @@
                         </TabPage>
                         <TabPage Text="Groups">
                           <StackLayout Orientation="Vertical">
-                            <Label>Numbered capture ()</Label>
-                            <Label>Noncapturing group (?:)</Label>
-                            <Label>Named capture (?&lt;Name&gt;)</Label>
-                            <Label>Balancing group (?&lt;Name1-Name2&gt;)</Label>
-                            <Label>Match suffix but exclude it (?=)</Label>
-                            <Label>Match prefix but exclude it (?&lt;=)</Label>
-                            <Label>Match if suffix is not present (?!)</Label>
-                            <Label>Match if prefix is not present (?&lt;!)</Label>
-                            <Label>Greedy subexpression (?&gt;)</Label>
-                            <Label>Comment (?#)</Label>
+                            <GroupBox Text="Capturing">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Matched subexpression ()</Label>
+                                <Label>Named matched subexpression (?&lt;GroupName&gt;)</Label>
+                                <Label>Balancing group (?&lt;GroupName1-GroupName2&gt;)</Label>
+                              </StackLayout>
+                            </GroupBox>
+                            <GroupBox Text="Noncapturing">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Noncapturing group (?:)</Label>
+                                <Label>Zero-width positive lookahead assertion (?=)</Label>
+                                <Label>Zero-width negative lookahead assertion (?!)</Label>
+                                <Label>Zero-width positive lookbehind assertion (?&lt;=)</Label>
+                                <Label>Zero-width negative lookbehind assertion (?&lt;!)</Label>
+                                <Label>Atomic group (?&gt;)</Label>
+                              </StackLayout>
+                            </GroupBox>
                           </StackLayout>
                         </TabPage>
                         <TabPage Text="Special">
@@ -153,6 +160,7 @@
                             <Label>Form feed \f</Label>
                             <Label>Backspace \b</Label>
                             <Label>Bell \a</Label>
+                            <Label>Escape \e</Label>
                             <Label>ASCII Octal \042</Label>
                             <Label>ASCII Hex \x42</Label>
                             <Label>Unicode \u0042</Label>
@@ -180,14 +188,106 @@
                           </StackLayout>
                         </TabPage>
                         <TabPage Text="Misc">
+                          <StackLayout Orientation="Vertical">
+                            <GroupBox Text="Conditional expressions">
+                              <StackLayout Orientation="Vertical">
+                                <Label>The False clause is optional</Label>
+                                <Label>Match an expression (?(expression)True|False)</Label>
+                                <Label>Match a numbered group (?(1)True|False)</Label>
+                                <Label>Match a named group (?(GroupName)True|False)</Label>
+                              </StackLayout>
+                            </GroupBox>
+                            <GroupBox Text="Backreference a group">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Numbered \1</Label>
+                                <Label>Named \k&lt;GroupName&gt;</Label>
+                              </StackLayout>
+                            </GroupBox>
+                          </StackLayout>
+                        </TabPage>
+                        <TabPage Text="Comments">
+                          <StackLayout Orientation="Vertical">
+                            <Label>If the Ignore Whitespace option is turned on, any text following</Label>
+                            <Label>the # sign is interpreted as a comment until the end of the line</Label>
+                            <Label>(X-mode), or you can enclose comments in a group at any point.</Label>
+                            <GroupBox Text="Comments">
+                              <StackLayout Orientation="Vertical">
+                                <Label>X-mode comment #Comment</Label>
+                                <Label>Comment group (?#Comment)</Label>
+                              </StackLayout>
+                            </GroupBox>
+                          </StackLayout>
                         </TabPage>
                         <TabPage Text="Repetitions">
+                          <StackLayout Orientation="Vertical">
+                            <GroupBox Text="Greedy quantifiers">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Zero or more *</Label>
+                                <Label>One or more +</Label>
+                                <Label>Zero or once ?</Label>
+                              </StackLayout>
+                            </GroupBox>
+                            <GroupBox Text="Lazy quantifiers (as few as possible)">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Zero or more *?</Label>
+                                <Label>One or more +?</Label>
+                                <Label>Zero or once ??</Label>
+                              </StackLayout>
+                            </GroupBox>
+                            <GroupBox Text="Numbered quantifiers">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Exactly n {n}</Label>
+                                <Label>At least n {n}</Label>
+                                <Label>Between n and m {n,m}</Label>
+                              </StackLayout>
+                            </GroupBox>
+                          </StackLayout>
                         </TabPage>
                         <TabPage Text="Options">
+                          <StackLayout Orientation="Vertical">
+                            <Label>Within a new noncapturing group (?imsnx:)</Label>
+                            <Label>Until the end of enclosing group (?imsnx)</Label>
+                            <GroupBox Text="Options">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Ignore case i</Label>
+                                <Label>Multiline m</Label>
+                                <Label>Single line s</Label>
+                                <Label>Explicit capture n</Label>
+                                <Label>Ignore pattern whitespace x</Label>
+                              </StackLayout>
+                            </GroupBox>
+                            <GroupBox Text="Examples">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Everything on (?imsnx-:pattern)</Label>
+                                <Label>Everything off (?-imsnx:pattern)</Label>
+                                <Label>Ignore case off, multiline on, rest from global (?m-i:pattern)</Label>
+                              </StackLayout>
+                            </GroupBox>
+                          </StackLayout>
                         </TabPage>
                         <TabPage Text="Alternatives">
+                          <StackLayout Orientation="Vertical">
+                            <Label>Match either item One|Two|Three</Label>
+                            <Label>Match either item in a group (One|Two|Three)</Label>
+                            <Label>Match either item in a non-capturing group (?:One|Two|Three)</Label>
+                          </StackLayout>
                         </TabPage>
                         <TabPage Text="Substitutions">
+                          <StackLayout Orientation="Vertical">
+                            <Label>Substitutions are used to build a replacement string, which is used for the Replace operation.</Label>
+                            <GroupBox Text="Substitutions">
+                              <StackLayout Orientation="Vertical">
+                                <Label>Numbered group $1</Label>
+                                <Label>Named group ${GroupName}</Label>
+                                <Label>The $ literal $$</Label>
+                                <Label>Entire match $&amp;</Label>
+                                <Label>Text prior to the match $`</Label>
+                                <Label>Text following the match $'</Label>
+                                <Label>Last group captured $+</Label>
+                                <Label>Entire input string $_</Label>
+                              </StackLayout>
+                            </GroupBox>
+                          </StackLayout>
                         </TabPage>
                       </TabControl>
                     </TableCell>
