@@ -5,6 +5,8 @@
     <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     
     <RuntimeIdentifiers>osx-x64</RuntimeIdentifiers>
+    
+    <Version>1.0.1</Version>
   </PropertyGroup>
 	
   <ItemGroup>

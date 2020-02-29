@@ -94,7 +94,11 @@ namespace RegexTestBench
             {
                 ShowTimeoutErrorMessage();
             }
-        }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxType.Error);
+            }
+}
 
         private void HandleReplace(object sender, EventArgs e)
         {
@@ -106,6 +110,10 @@ namespace RegexTestBench
             catch (RegexMatchTimeoutException)
             {
                 ShowTimeoutErrorMessage();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxType.Error);
             }
         }
 
@@ -120,15 +128,17 @@ namespace RegexTestBench
             {
                 ShowTimeoutErrorMessage();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxType.Error);
+            }
         }
 
         private static void ShowTimeoutErrorMessage()
         {
             MessageBox.Show("The pattern matching ran longer than the maximum allowed time.\n" +
                 "Check the Timeout setting (by default it is 2 seconds).", "Regex Timeout",
-                MessageBoxButtons.OK,
-                MessageBoxType.Error,
-                MessageBoxDefaultButton.OK);
+                MessageBoxType.Error);
         }
 
         private void HandleResultExplorerSelectedItemChanged(object sender, EventArgs e)
