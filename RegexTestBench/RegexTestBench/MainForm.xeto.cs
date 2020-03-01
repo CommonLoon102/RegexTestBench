@@ -337,6 +337,7 @@ namespace RegexTestBench
             txtMatchValue.Text = string.Empty;
             splResultExplorer.Position = splResultExplorer.Height - 30;
             tvwResultExplorer.ShowHeader = false;
+            tvwResultExplorer.AllowMultipleSelection = false;
             tvwResultExplorer.Columns.Clear();
             tvwResultExplorer.Columns.Add(new GridColumn()
             {
