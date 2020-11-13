@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <Form
-	xmlns="http://schema.picoe.ca/eto.forms" 
+	xmlns="http://schema.picoe.ca/eto.forms"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	Title="Regex Test Bench 1.0.1"
+	Title="Regex Test Bench 1.0.2"
 	ClientSize="1000, 720"
 	MinimumSize="1000, 720"
 	Padding="10"
@@ -87,7 +87,7 @@
                                   <Label>Timeout</Label>
                                   <Panel Padding="5,0,5,0">
                                     <NumericStepper ID="nudTimeout"
-                                                    MinValue="1"
+                                                    MinValue="0"
                                                     MaxValue="100000"
                                                     MaximumDecimalPlaces="0"
                                                     Value="2000"

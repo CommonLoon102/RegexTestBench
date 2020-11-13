@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	
+
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
-    
+    <TargetFrameworks>net5.0</TargetFrameworks>
+
     <RuntimeIdentifiers>osx-x64</RuntimeIdentifiers>
-    
-    <Version>1.0.1</Version>
+
+    <Version>1.0.2</Version>
   </PropertyGroup>
-	
+
   <ItemGroup>
     <ProjectReference Include="..\RegexTestBench\RegexTestBench.csproj" />
   </ItemGroup>
-	
+
   <ItemGroup>
-    <PackageReference Include="Eto.Platform.Mac64" Version="2.5.0" />
+    <PackageReference Include="Eto.Platform.Mac64" Version="2.5.6" />
   </ItemGroup>
-	
+
 </Project>
