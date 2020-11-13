@@ -1,46 +1,22 @@
-using System;
-using System.Linq;
-using System.Collections.Generic;
 using Eto.Forms;
-using Eto.Drawing;
-using Eto.Serialization.Xaml;
-using System.Text.RegularExpressions;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace RegexTestBench
 {
-    public class MainForm : Form
+    public partial class MainForm : Form
     {
-        #region Controls
-        private readonly TextArea txtRegexPattern;
-        private readonly TextArea txtReplacementString;
-        private readonly TextArea txtInputText;
-        private readonly TextArea txtMatchValue;
-        private readonly ListBox lboPatternHistory;
-        private readonly ListBox lboInputHistory;
-        private readonly CheckBox chkCompiled;
-        private readonly CheckBox chkCultureInvariant;
-        private readonly CheckBox chkEcmaScript;
-        private readonly CheckBox chkExplicitCapture;
-        private readonly CheckBox chkIgnoreWhite;
-        private readonly CheckBox chkIgnoreCase;
-        private readonly CheckBox chkMultiline;
-        private readonly CheckBox chkRightToLeft;
-        private readonly CheckBox chkSingleLine;
-        private readonly NumericStepper nudTimeout;
-        private readonly Splitter splResultExplorer;
-        private readonly TreeGridView tvwResultExplorer;
-        private readonly Label lblStatusMessage;
-        private readonly Label lblPosition;
-        #endregion // Controls
+        private readonly LinkedList<RegexPattern> _patternHistory = new();
+        private readonly LinkedList<string> _inputHistory = new();
 
-        private readonly LinkedList<RegexPattern> patternHistory = new LinkedList<RegexPattern>();
-        private readonly LinkedList<string> inputHistory = new LinkedList<string>();
+        private Regex CurrentRegex => CurrentPattern.Regex;
 
         private RegexPattern CurrentPattern =>
-            new RegexPattern()
+            new RegexPattern(txtRegexPattern.Text)
             {
-                Pattern = txtRegexPattern.Text,
                 ReplacementText = txtReplacementString.Text,
                 IsCompiled = chkCompiled.Checked ?? false,
                 IsCultureInvariant = chkCultureInvariant.Checked ?? false,
@@ -54,34 +30,7 @@ namespace RegexTestBench
                 Timeout = (int)nudTimeout.Value
             };
 
-        private Regex CurrentRegex => CurrentPattern.Regex;
-
-        public MainForm()
-        {
-            XamlReader.Load(this);
-            #region Initialize Controls
-            txtRegexPattern = FindChild<TextArea>("txtRegexPattern");
-            txtReplacementString = FindChild<TextArea>("txtReplacementString");
-            txtInputText = FindChild<TextArea>("txtInputText");
-            txtMatchValue = FindChild<TextArea>("txtMatchValue");
-            lboPatternHistory = FindChild<ListBox>("lboPatternHistory");
-            lboInputHistory = FindChild<ListBox>("lboInputHistory");
-            chkCompiled = FindChild<CheckBox>("chkCompiled");
-            chkCultureInvariant = FindChild<CheckBox>("chkCultureInvariant");
-            chkEcmaScript = FindChild<CheckBox>("chkEcmaScript");
-            chkExplicitCapture = FindChild<CheckBox>("chkExplicitCapture");
-            chkIgnoreWhite = FindChild<CheckBox>("chkIgnoreWhite");
-            chkIgnoreCase = FindChild<CheckBox>("chkIgnoreCase");
-            chkMultiline = FindChild<CheckBox>("chkMultiline");
-            chkRightToLeft = FindChild<CheckBox>("chkRightToLeft");
-            chkSingleLine = FindChild<CheckBox>("chkSingleLine");
-            nudTimeout = FindChild<NumericStepper>("nudTimeout");
-            splResultExplorer = FindChild<Splitter>("splResultExplorer");
-            tvwResultExplorer = FindChild<TreeGridView>("tvwResultExplorer");
-            lblStatusMessage = FindChild<Label>("lblStatusMessage");
-            lblPosition = FindChild<Label>("lblPosition");
-            #endregion // Initialize Controls
-        }
+        public MainForm() : this(initializeControls: true) { }
 
         private void HandleMatch(object sender, EventArgs e)
         {
@@ -98,7 +47,7 @@ namespace RegexTestBench
             {
                 MessageBox.Show(ex.Message, "Error", MessageBoxType.Error);
             }
-}
+        }
 
         private void HandleReplace(object sender, EventArgs e)
         {
@@ -147,7 +96,7 @@ namespace RegexTestBench
             {
                 case Capture capture:
                     txtMatchValue.Text = capture.Value;
-                    txtInputText.Selection = new Range<int>(capture.Index, capture.Index + capture.Length - 1);
+                    txtInputText.Selection = new(capture.Index, capture.Index + capture.Length - 1);
                     txtInputText.Focus();
                     lblPosition.Text = $"Position: {capture.Index} Length: {capture.Length}";
                     break;
@@ -186,26 +135,26 @@ namespace RegexTestBench
             if (lboInputHistory.SelectedIndex < 0)
                 return;
 
-            string inputText = (lboInputHistory.Items[lboInputHistory.SelectedIndex] as ListItem).Tag as string;
+            var inputText = (lboInputHistory.Items[lboInputHistory.SelectedIndex] as ListItem).Tag as string;
             txtInputText.Text = inputText;
-            txtInputText.Selection = new Range<int>(0, 0);
+            txtInputText.Selection = new(0, 0);
         }
 
         private void RunMatch()
         {
-            var groupNames = CurrentRegex.GetGroupNames();
-            Stopwatch stopwatch = new Stopwatch();
+            string[] groupNames = CurrentRegex.GetGroupNames();
+            var stopwatch = new Stopwatch();
             stopwatch.Start();
             MatchCollection matches = CurrentRegex.Matches(txtInputText.Text);
             stopwatch.Stop();
-            string match = matches.Count == 1 ? "Match" : "Matches";
+            var match = matches.Count == 1 ? "Match" : "Matches";
             lblStatusMessage.Text = $"{matches.Count} {match}, {stopwatch.Elapsed.TotalMilliseconds} ms";
             PopulateResultExplorerMatch(matches, groupNames);
         }
 
         private void RunReplace()
         {
-            Stopwatch stopwatch = new Stopwatch();
+            var stopwatch = new Stopwatch();
             stopwatch.Start();
             string replacedText = CurrentRegex.Replace(txtInputText.Text, txtReplacementString.Text);
             stopwatch.Stop();
@@ -216,11 +165,11 @@ namespace RegexTestBench
 
         private void RunSplit()
         {
-            Stopwatch stopwatch = new Stopwatch();
+            var stopwatch = new Stopwatch();
             stopwatch.Start();
             string[] splitTexts = CurrentRegex.Split(txtInputText.Text);
             stopwatch.Stop();
-            string part = splitTexts.Length == 1 ? "Part" : "Parts";
+            var part = splitTexts.Length == 1 ? "Part" : "Parts";
             lblStatusMessage.Text = $"{splitTexts.Length} {part}, {stopwatch.Elapsed.TotalMilliseconds} ms";
             lblPosition.Text = string.Empty;
             PopulateResultExplorerSplit(splitTexts);
@@ -228,15 +177,15 @@ namespace RegexTestBench
 
         private void SaveHistory()
         {
-            if (!patternHistory.Any(ph => ph.IsSame(CurrentPattern)))
+            if (!_patternHistory.Any(ph => ph.IsSame(CurrentPattern)))
             {
-                patternHistory.AddFirst(CurrentPattern);
+                _patternHistory.AddFirst(CurrentPattern);
                 UpdatePatternHistoryListBox();
             }
 
-            if (!inputHistory.Any(ih => ih == txtInputText.Text))
+            if (!_inputHistory.Any(ih => ih == txtInputText.Text))
             {
-                inputHistory.AddFirst(txtInputText.Text);
+                _inputHistory.AddFirst(txtInputText.Text);
                 UpdateInputHistoryListBox();
             }
         }
@@ -245,7 +194,7 @@ namespace RegexTestBench
         {
             lboPatternHistory.SuspendLayout();
             lboPatternHistory.Items.Clear();
-            foreach (RegexPattern item in patternHistory)
+            foreach (RegexPattern item in _patternHistory)
             {
                 lboPatternHistory.Items.Add(
                     new ListItem()
@@ -254,6 +203,7 @@ namespace RegexTestBench
                         Text = item.ToString()
                     });
             }
+
             lboPatternHistory.ResumeLayout();
         }
 
@@ -261,15 +211,16 @@ namespace RegexTestBench
         {
             lboInputHistory.SuspendLayout();
             lboInputHistory.Items.Clear();
-            foreach (string item in inputHistory)
+            foreach (string item in _inputHistory)
             {
                 lboInputHistory.Items.Add(
                     new ListItem()
                     {
                         Tag = item,
-                        Text = new string(item.Take(20).TakeWhile(c => c != '\r' && c != '\n').ToArray())
+                        Text = new(item.Take(20).TakeWhile(c => c != '\r' && c != '\n').ToArray())
                     });
             }
+
             lboInputHistory.ResumeLayout();
         }
 

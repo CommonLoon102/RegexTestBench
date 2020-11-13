@@ -1,41 +1,51 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace RegexTestBench
 {
-    class RegexPattern
+    internal class RegexPattern
     {
-        public string Pattern { get; set; }
-        public string ReplacementText { get; set; }
-        public bool IsCompiled { get; set; }
-        public bool IsIgnoreCase { get; set; }
-        public bool IsMultiline { get; set; }
-        public bool IsExplicitCapture { get; set; }
-        public bool IsEcmaScript { get; set; }
-        public bool IsIgnoreWhite { get; set; }
-        public bool IsSingleLine { get; set; }
-        public bool IsRightToLeft { get; set; }
-        public bool IsCultureInvariant { get; set; }
-        public int Timeout { get; set; }
+        private readonly string _pattern;
 
-        public override string ToString() => Pattern;
+        public RegexPattern(string pattern)
+        {
+            if (string.IsNullOrEmpty(pattern))
+                throw new ArgumentException($"The parameter '{nameof(pattern)}' must not be null or empty string.", nameof(pattern));
 
-        public Regex Regex => new Regex(Pattern, RegexOptions, TimeSpan.FromMilliseconds(Timeout));
+            _pattern = pattern;
+        }
+
+        public string Pattern => _pattern;
+        public string ReplacementText { get; init; }
+        public bool IsCompiled { get; init; }
+        public bool IsIgnoreCase { get; init; }
+        public bool IsMultiline { get; init; }
+        public bool IsExplicitCapture { get; init; }
+        public bool IsEcmaScript { get; init; }
+        public bool IsIgnoreWhite { get; init; }
+        public bool IsSingleLine { get; init; }
+        public bool IsRightToLeft { get; init; }
+        public bool IsCultureInvariant { get; init; }
+        public int Timeout { get; init; }
+
+        public Regex Regex => new(_pattern,
+            RegexOptions,
+            Timeout == 0 ? Regex.InfiniteMatchTimeout : TimeSpan.FromMilliseconds(Timeout));
 
         public bool IsSame(RegexPattern other) => IsCompiled == other.IsCompiled
-                && IsCultureInvariant == other.IsCultureInvariant
-                && IsEcmaScript == other.IsEcmaScript
-                && IsExplicitCapture == other.IsExplicitCapture
-                && IsIgnoreCase == other.IsIgnoreCase
-                && IsIgnoreWhite == other.IsIgnoreWhite
-                && IsMultiline == other.IsMultiline
-                && IsRightToLeft == other.IsRightToLeft
-                && IsSingleLine == other.IsSingleLine
-                && Pattern == other.Pattern
-                && ReplacementText == other.ReplacementText
-                && Timeout == other.Timeout;
+            && IsCultureInvariant == other.IsCultureInvariant
+            && IsEcmaScript == other.IsEcmaScript
+            && IsExplicitCapture == other.IsExplicitCapture
+            && IsIgnoreCase == other.IsIgnoreCase
+            && IsIgnoreWhite == other.IsIgnoreWhite
+            && IsMultiline == other.IsMultiline
+            && IsRightToLeft == other.IsRightToLeft
+            && IsSingleLine == other.IsSingleLine
+            && Pattern == other.Pattern
+            && ReplacementText == other.ReplacementText
+            && Timeout == other.Timeout;
+
+        public override string ToString() => _pattern;
 
         private RegexOptions RegexOptions
         {
