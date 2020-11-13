@@ -5,7 +5,7 @@
     <TargetFrameworks>net5.0-windows</TargetFrameworks>
     <Version>1.0.2</Version>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\RegexTestBench\RegexTestBench.csproj" />
   </ItemGroup>
