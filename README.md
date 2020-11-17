@@ -1,5 +1,5 @@
 # RegexTestBench
-Cross-platform regex testing tool in .NET Core
+Cross-platform regex testing tool in .NET 5
 
 **Protip**: use the [RegexFileSearcher](https://github.com/CommonLoon102/RegexFileSearcher) to search by regexes for files on your filesystem.
 
